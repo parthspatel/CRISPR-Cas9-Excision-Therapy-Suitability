@@ -1,4 +1,4 @@
-# Senior-Design
+# Senior Design: CRISPR-Cas9 Excision Therapy Suitability
 
 
 This is designed to determine if a patient is suitable for a *Sp*Cas9 therapy.
