@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import csv
 
 from probe import probe
 from target import target
@@ -9,29 +10,35 @@ from crisprtree import evaluators
 
 # File Paths to the input data
 # Use argparse to dynamically input paths
-paths = ['C:\\Users\\parth\\Desktop\\Python Workspace\\Senior Design\\Data\\hiv-1-700.fixed.fst'
-        ,'C:\\Users\\parth\\Desktop\\Python Workspace\\Senior Design\\Data\\hiv-9086-9717.fixed.fst']
+paths = ['C:\\Users\\parth\\Desktop\\Python Workspace\\Senior Design\\Data\\hiv-1-700.fixed.fst',
+         'C:\\Users\\parth\\Desktop\\Python Workspace\\Senior Design\\Data\\hiv-9086-9717.fixed.fst']
 
 # Generate the probes/kmers for the Microarray & seqs that represent potential seqs for CRISPR
 p = probe(paths).importSequences().generate()
 
+# Print the probes to a csv file
+# p.toCSV(p.kmers[0],'C:\Users\parth\Desktop\Python Workspace\Senior Design\Data\probes.csv')
+
+
 # Generate the target sequences from the refrences HXB2 cell line
-t = target(p.proto,paths).generate()
+t = target(p.proto, paths).generate()
 
 
 # Filter out target seqs that have missing bases '-' and create all possible valid pairs between the protospacer and the target sequnces.
 #-------------------------------------------------------------------------------
 inputSeqs = pd.DataFrame()
 #p.proto = p.proto[0:1000]
-for i,spacer in enumerate(p.proto[0]):
-    if i % 1000 == 0: print(spacer,i)
-    for _,mer in enumerate(t.kmers[1]): # Runs on the begining of the LTR (t.kmers[0]), the end of the LTR (t.kmers[1])
+for i, spacer in enumerate(p.proto[0]):
+    if i % 1000 == 0:
+        print(spacer, i)
+    # Runs on the begining of the LTR (t.kmers[0]), the end of the LTR (t.kmers[1])
+    for _, mer in enumerate(t.kmers[1]):
         if '-' not in mer:
-            inputSeqs = inputSeqs.append(pd.DataFrame([spacer],[mer]))
+            inputSeqs = inputSeqs.append(pd.DataFrame([spacer], [mer]))
 
 inputSeqs = inputSeqs.reset_index()
-inputSeqs.columns = ['target','gRNA']
-inputSeqs = inputSeqs.reindex(columns = ['gRNA','target'])
+inputSeqs.columns = ['target', 'gRNA']
+inputSeqs = inputSeqs.reindex(columns=['gRNA', 'target'])
 
 
 # Run the pairs of sequence through the binding estimator
@@ -42,7 +49,8 @@ pipe = np.array(inputSeqs)
 
 # Test using the MIT estimator, upgrade to CFD in the future
 est = estimators.MITEstimator(pipe)
-estResults = est.build_pipeline().predict(pipe)  # to get the numerical scores use predict_proba, for boolean use predict
+# to get the numerical scores use predict_proba, for boolean use predict
+estResults = est.build_pipeline().predict(pipe)
 
 pipe = pd.DataFrame(pipe)
 
