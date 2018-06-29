@@ -7,6 +7,6 @@ First, it finds all the 23bp sequences within the Los Alamos Database. Once the 
 
 Next, it will use the crisprtree module to emulate *Sp*Cas9 binding and determine which probes can bind to which DNA sequences.  In order to determine patient suitability this information will be combinded with a microarray analysis.  This analysis is still currently in development.
 
-The crisprtree python module has been developed by Dr. Will Dampier, to refrence my fork: [crisprtree](https://github.com/parthspatel/crisprtree)
+The crisprtree python module has been developed by Dr. Will Dampier's Lab.
 
-To learn more about the project, please refrence my webpage: [parthspatel.me](http://parthspatel.me/senior-design/)
+To learn more about the project, please refrence my webpage: [parthspatel.me](https://parthspatel.me/senior-design/)
